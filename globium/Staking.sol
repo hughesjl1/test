@@ -4,6 +4,51 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
+
+library RewardRelease {
+
+    struct RewardSchedule {
+        uint256 startDate;
+        uint8 intervals;
+        uint8 periodMonths;
+    }
+
+    function releaseDates(RewardSchedule storage _data) internal returns(uint256[]) {
+        uint8 noOfDates = 1 + _data.intervals;
+
+        uint256 _dates = new uint256[](noOfDates);
+
+        uint8 periods = RewardSchedule.periodMonths / RewardSchedule.intervals;
+        for (uint8 i = 0; i <= noOfDates; i++) {
+            uint256 _nextDate = RewardSchedule.startDate + (i*periods);
+            _dates[i] = _nextDate;
+        }
+
+        return _dates;
+
+    }
+}
+
+contract RewardsReleased {
+
+    using RewardRelease for RewardRelease.RewardSchedule;
+    RewardRelease.RewardSchedule releaseSchedule;
+
+    address private owner;
+
+    constructor(uint256 _startDate, uint8 _intervals, uint8 _periods) {
+        owner = msg.sender;
+        releaseSchedule = RewardRelease.RewardSchedule({startDate:_startDate,intervals: _intervals, periods : periodMonths months});
+
+    }
+
+    function getReleaseDates() public returns (uint256[]) {
+        uint256[] _data = releaseSchedule.release
+    }
+
+    
+}
+
 abstract contract StakingStorage {
     /*
     *@dev Amount staked per account
